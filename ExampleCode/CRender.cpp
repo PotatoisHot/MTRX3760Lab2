@@ -61,4 +61,18 @@ void CRender::DrawLine( Vec2D aStart, Vec2D aEnd, float aThickness, Color aColor
     Vector2 End = { aEnd.x, aEnd.y };
 
     ::DrawLineEx( Start, End, aThickness, aColor );
-}
+};
+
+void CRender::DrawLoop( const std::vector<Vec2D>& aVertices, float aThickness, Color aColor )
+{
+    if( !aVertices.empty() )
+    {
+        // Start from the last vertex so the first edge drawn closes the loop.
+        Vec2D Previous = aVertices.back();
+        for( const Vec2D& Vertex : aVertices )
+        {
+            DrawLine( Previous, Vertex, aThickness, aColor );
+            Previous = Vertex;
+        }
+    }
+};

@@ -39,7 +39,7 @@ void DrawLoop( CRender& aRender, const CLoopReader& aLoop )
         Vec2D Previous = Vertices.back();
         for( const Vec2D& Vertex : Vertices )
         {
-            aRender.DrawLine( Previous, Vertex, EdgeThickness, RAYWHITE );
+            aRender.DrawLine( Previous, Vertex, EdgeThickness, RAYWHITE);
             Previous = Vertex;
         }
     }
@@ -50,6 +50,7 @@ int main( int argc, char* argv[] )
 {
     // View the file named on the command line, or a default if none is given.
     std::string Filename = "SimpleWalls.map";
+    //std::string Filename = "SimpleLine.map";
     if( argc > 1 )
     {
         Filename = argv[1];

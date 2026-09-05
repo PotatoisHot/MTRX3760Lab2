@@ -77,8 +77,8 @@ class CBall
 //-----------------------------------------------------------------------------
 int main()
 {
-    const int NumBalls = 500;
-    const int NumTethers = 500;
+    const int NumBalls = 1;
+    const int NumTethers = NumBalls;
     CRender Render;
     std::vector<CBall*> Balls;
 

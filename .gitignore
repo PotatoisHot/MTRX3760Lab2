@@ -1,0 +1,26 @@
+# CMake-generated files
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+CMakeLists.txt.user
+CMakeUserPresets.json
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+Testing/
+_deps/
+Makefile
+
+# Build and output folders
+build/
+bin/
+
+# Compiled binaries and object files
+*.o
+*.a
+*.so
+*.pdf
+a.out
+ExampleCode/TestRender
+ExampleCode/TestLoopReader

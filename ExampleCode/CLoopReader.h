@@ -36,8 +36,7 @@
 #ifndef CLOOPREADER_H
 #define CLOOPREADER_H
 
-#include "CRender.h"   // for Vec2D
-
+#include "Geometry.h" // For Vec2D
 #include <string>
 #include <vector>
 

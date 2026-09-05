@@ -60,13 +60,9 @@
 #define CRENDER_H
 
 #include "raylib.h"
+#include "Geometry.h" // For Vec2D
+#include <vector>
 
-//-----------------------------------------------------------------------------
-struct Vec2D
-{
-    float x;
-    float y;
-};
 
 //-----------------------------------------------------------------------------
 class CRender
@@ -85,6 +81,7 @@ class CRender
 
         void DrawCircle( Vec2D aPosition, int aRadius, Color aColor );
         void DrawLine( Vec2D aStart, Vec2D aEnd, float aThickness, Color aColor );
+        void DrawLoop( const std::vector<Vec2D>& aVertices, float aThickness, Color aColor );
 
         //---Access to the window---
         int GetScreenWidth() const;
