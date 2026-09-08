@@ -4,7 +4,7 @@ project(MTRX3760Lab2A1 CXX)              # Name of this project
 set(CMAKE_CXX_STANDARD 17)               # Build against C++17
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_CXX_FLAGS "-Wall -Wextra")     # Show warnings
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wshadow")   # Show warnings
 
 set( CMAKE_RUNTIME_OUTPUT_DIRECTORY      # Destination for generated executable
     ${CMAKE_SOURCE_DIR}/bin
@@ -27,8 +27,13 @@ include_directories(                     # Where are the header files
 
 add_executable( simulator                # Instructions for making "simulator"
     src/main.cpp
-    src/CRobot.cpp
     src/CSimulator.cpp
+    src/CRobot.cpp
+    src/CWFRobot.cpp
+    src/CSensor.cpp
+    src/CMotor.cpp
+    src/Geometry.cpp
+    src/Helper.cpp
     ${EXAMPLE_CODE_DIR}/CRender.cpp
     ${EXAMPLE_CODE_DIR}/CLoopReader.cpp
 )

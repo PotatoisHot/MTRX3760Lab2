@@ -1,108 +1,130 @@
 #include "CSimulator.h"
+#include <cmath>
+#include <iostream>
 
-
-CSimulator::CSimulator(int aTimeStep)
-    :mCurrentTime(0), mTimeStep(aTimeStep)
+//-----------------------------------------------------------------------------
+CSimulator::CSimulator( float aTimeStep )
+    : mTimeStep( aTimeStep ),
+      mCurrentTime( 0 ),
+      mUpdateCount( 0 )
 {
-    std::cout << "Simulator has been intialised!" << std::endl;
-    std::cout << "Current speed (time step size):" << mTimeStep << std::endl;
-    std::cout << "Please finish the configuration before RunSimulator() with SetMap() and AddRobot()" << std::endl;
-    std::cout << "If you are unsure about your configurations. You can check it with CheckConfig(), which will return a boolean value" << std::endl;
+    std::cout << "Simulator has been initialised!" << std::endl;
+    std::cout << "Time step size: " << mTimeStep << std::endl;
+    std::cout << "Please finish the configuration with SetMap() and AddRobot() before RunSimulator()" << std::endl;
     std::cout << "Enjoy your simulation! - From Dang and Ivy :3" << std::endl;
-};
+}
 
-
+//-----------------------------------------------------------------------------
 CSimulator::~CSimulator()
 {
     std::cout << "Simulator is being removed" << std::endl;
-};
+}
 
-
-bool CSimulator::SetMap( std::string aFileName )
+//-----------------------------------------------------------------------------
+bool CSimulator::SetMap( const std::string& aFileName )
 {
     bool ReadSuccess = mLoopReader.ReadFile( aFileName );
+
     if ( ReadSuccess )
     {
-        std::cout << "Read "<< aFileName << " sucessfully";
+        std::cout << "Read " << aFileName << " successfully" << std::endl;
     }
-    else 
+    else
     {
-        std::cout << "Read "<< aFileName << " unsucessfully! Please check the input file name or the file format.";
+        std::cout << "Could not read " << aFileName
+                  << "! Please check the file name and format." << std::endl;
     }
 
     return ReadSuccess;
 }
 
-bool CSimulator::AddRobot(CRobot* aRobot, int aID)
-{   
-    bool AddSuccess = true;
-    if ( aRobot == nullptr )
+//-----------------------------------------------------------------------------
+bool CSimulator::AddRobot( CRobot* apRobot )
+{
+    bool AddSuccess = false;
+
+    if ( apRobot == nullptr )
     {
         std::cout << "Robot is a nullptr! Please check the input robot pointer." << std::endl;
-        AddSuccess = false;
     }
     else
     {
-        mRobots.push_back(aRobot);
-        std::cout << "Robot has been added to the simulator!" << std::endl;
+        mRobots.push_back( apRobot );
+        std::cout << "Added robot '" << apRobot->GetName() << "' to the simulator" << std::endl;
+        AddSuccess = true;
     }
 
     return AddSuccess;
 }
 
-
-
-bool CSimulator::RemoveRobot( int aID )
+//-----------------------------------------------------------------------------
+bool CSimulator::RemoveRobot()
 {
-    bool DeleteSuccess = false;
-    for ( int i=0; i < mRobots.size(); i++ )
-    {
-        if ( mRobots[i]->GetID() == aID )
-        {   
-            mRobots.erase(mRobots.begin() + i);
-            std::cout << "Robot with ID= " << aID << " has been deleted." <<std::endl;
-            DeleteSuccess = true;
-        }
-    }
-    
-    if ( !DeleteSuccess )
-    {
-        std::cout << "There is not any robots in the system assigned with the given ID= " << aID << "." << std::endl;
-    }
-
-    return DeleteSuccess;
+    return false;   // not written yet
 }
 
+//-----------------------------------------------------------------------------
+bool CSimulator::CheckConfig()
+{
+    return !mRobots.empty() && !mLoopReader.GetVertices().empty();
+}
 
+//-----------------------------------------------------------------------------
+const CPose& CSimulator::GetStartPose() const
+{
+    return mLoopReader.GetStartPose();
+}
+
+//-----------------------------------------------------------------------------
 void CSimulator::RunSimulator()
-{   
-
-    while( !mRender.WindowShouldClose() )
+{
+    while ( !mRender.WindowShouldClose() )
     {
-        // Window has not been closed yet
-        CSimulator::Update();
+        Update();
+        Draw();
     }
 
     mRender.CloseWindow();
-    std::cout << "Simulator has been closed!" << std::endl;
-};
-
-
-void CSimulator::Update()
-{   
-    // Dang's Note: Add Robot Update
-    for ( int i = 0; i < mRobots.size(); i++)
-    {
-        Vec2D CurrentPosition = mRobots[i]->GetCurrentPosition();
-        int Radius = mRobots[i]->GetRadius();
-
-        mRender.BeginDrawing();
-        mRender.DrawLoop( mLoopReader.GetVertices(), 2.0, BLUE );
-        mRender.DrawCircle(CurrentPosition, Radius, RED);
-        mRender.EndDrawing();
-
-        mRobots[i]->Update(); // Just increase x-coordinates for now
-    }
-    //mCurrentTime += mTimeStep;
+    std::cout << "Simulator has been closed after " << mUpdateCount << " updates" << std::endl;
 }
 
+//-----------------------------------------------------------------------------
+// One fixed step of simulated time for every robot.
+//-----------------------------------------------------------------------------
+void CSimulator::Update()
+{
+    int NumRobots = int( mRobots.size() );
+
+    for ( int i = 0; i < NumRobots; i++ )
+    {
+        mRobots[i]->Update( float( mTimeStep ), mLoopReader.GetVertices() );
+    }
+
+    mCurrentTime += mTimeStep;
+    mUpdateCount++;
+}
+
+//-----------------------------------------------------------------------------
+// One frame: the room, then every robot as a disc with a heading line.
+//-----------------------------------------------------------------------------
+void CSimulator::Draw()
+{
+    mRender.BeginDrawing();
+    mRender.DrawLoop( mLoopReader.GetVertices(), 2.0f, BLUE );
+
+    int NumRobots = int( mRobots.size() );
+
+    for ( int i = 0; i < NumRobots; i++ )
+    {
+        const CPose& Pose   = mRobots[i]->GetPose();
+        float        Radius = float( mRobots[i]->GetRadius() );
+
+        Vec2D HeadingEnd = { Pose.mPosition.x + Radius * std::cos( Pose.mHeading ),
+                             Pose.mPosition.y + Radius * std::sin( Pose.mHeading ) };
+
+        mRender.DrawCircle( Pose.mPosition, mRobots[i]->GetRadius(), RED );
+        mRender.DrawLine( Pose.mPosition, HeadingEnd, 2.0f, BLACK );
+    }
+
+    mRender.EndDrawing();
+}
