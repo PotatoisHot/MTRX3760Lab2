@@ -41,6 +41,13 @@ const CPose& CRobot::GetPose() const
     return mPose;
 }
 
+
+//-----------------------------------------------------------------------------
+const std::vector<Vec2D>& CRobot::GetTrail() const
+{
+    return mTrail;
+}
+
 //-----------------------------------------------------------------------------
 // Differential drive. The wheels sit at the rim, one either side, so the
 // wheel base is the diameter. The turn rate comes from the difference in
@@ -67,6 +74,7 @@ void CRobot::Drive( float aSpeed, float aTurnRate, float aTimeStep )
     // update rather than the start, so arcs do not spiral outward.
     float MidHeading = mPose.mHeading + TurnRate * aTimeStep / 2.0f;
 
+    mTrail.push_back( mPose.mPosition );   // log the old position before moving
     mPose.mPosition.x += Speed * std::cos( MidHeading ) * aTimeStep;
     mPose.mPosition.y += Speed * std::sin( MidHeading ) * aTimeStep;
     mPose.mHeading    += TurnRate * aTimeStep;

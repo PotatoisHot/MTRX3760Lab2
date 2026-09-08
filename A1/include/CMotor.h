@@ -1,8 +1,9 @@
 //-----------------------------------------------------------------------------
 // CMotor.h
-//
+
 // One drive wheel. Holds a speed that is clamped to what the motor can do.
-// Written by Dangaroo :D
+
+// Written by Dangaroo :D 
 //-----------------------------------------------------------------------------
 
 #ifndef CMOTOR_H

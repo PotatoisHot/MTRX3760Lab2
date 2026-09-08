@@ -1,9 +1,11 @@
 //-----------------------------------------------------------------------------
 // CRobot.h
-//
+
 // Base class for every robot in the simulator. Owns the pose, the two drive
 // wheels, and the kinematics that turn wheel speeds into motion. A derived
 // class adds its sensors and a control law by implementing Update().
+
+// Written by Dangaroo :D 
 //-----------------------------------------------------------------------------
 
 #ifndef CROBOT_H
@@ -27,6 +29,7 @@ class CRobot
         int                GetRadius() const;
         const CPose&       GetStartPose() const;
         const CPose&       GetPose() const;
+        const std::vector<Vec2D>& GetTrail() const;
 
         //---Simulation---
         // Advance the robot by one fixed timestep. aWalls is the closed loop
@@ -48,6 +51,9 @@ class CRobot
 
         CMotor mLeftMotor;
         CMotor mRightMotor;
+
+        // Log the robot's previous coordinates for trail plotting
+        std::vector<Vec2D> mTrail;
 };
 
 #endif

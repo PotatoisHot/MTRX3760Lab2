@@ -118,12 +118,14 @@ void CSimulator::Draw()
     {
         const CPose& Pose   = mRobots[i]->GetPose();
         float        Radius = float( mRobots[i]->GetRadius() );
+        const std::vector<Vec2D>& Trail = mRobots[i]->GetTrail();
 
         Vec2D HeadingEnd = { Pose.mPosition.x + Radius * std::cos( Pose.mHeading ),
                              Pose.mPosition.y + Radius * std::sin( Pose.mHeading ) };
 
         mRender.DrawCircle( Pose.mPosition, mRobots[i]->GetRadius(), RED );
-        mRender.DrawLine( Pose.mPosition, HeadingEnd, 2.0f, BLACK );
+        mRender.DrawLine( Pose.mPosition, HeadingEnd, 2.0f, WHITE );
+        mRender.DrawTrail( Trail, 2.0f, PURPLE );
     }
 
     mRender.EndDrawing();

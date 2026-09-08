@@ -11,7 +11,6 @@
 #define SIMULATOR_H
 
 #include "CRobot.h"
-#include "CMap.h"
 #include "CRender.h"
 #include "CLoopReader.h"
 #include <string>
@@ -41,7 +40,6 @@ class CSimulator
         void Draw();
 
         std::vector<CRobot*> mRobots;
-        CMap        mMap;
         CRender     mRender;
         CLoopReader mLoopReader;
 
