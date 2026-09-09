@@ -11,8 +11,8 @@
 //-----------------------------------------------------------------------------
 CRender::CRender()
     :
-        mScreenWidth( 800 ),
-        mScreenHeight( 600 )
+        mScreenWidth( kMaxScreenWidth ),
+        mScreenHeight( kMaxScreenHeight )
 {
     InitWindow( mScreenWidth, mScreenHeight, "Watashi wa Dangaroo desu" );
     SetTargetFPS( 60 );
@@ -70,6 +70,20 @@ void CRender::DrawLoop( const std::vector<Vec2D>& aVertices, float aThickness, C
         // Start from the last vertex so the first edge drawn closes the loop.
         Vec2D Previous = aVertices.back();
         for( const Vec2D& Vertex : aVertices )
+        {
+            DrawLine( Previous, Vertex, aThickness, aColor );
+            Previous = Vertex;
+        }
+    }
+};
+
+void CRender::DrawTrail( const std::vector<Vec2D>& aTrail, float aThickness, Color aColor )
+{
+    if( !aTrail.empty() )
+    {
+        // Start from the first vertex so the trail is drawn in order.
+        Vec2D Previous = aTrail.front();
+        for( const Vec2D& Vertex : aTrail )
         {
             DrawLine( Previous, Vertex, aThickness, aColor );
             Previous = Vertex;

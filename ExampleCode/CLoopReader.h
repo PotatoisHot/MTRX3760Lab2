@@ -36,18 +36,13 @@
 #ifndef CLOOPREADER_H
 #define CLOOPREADER_H
 
-#include "Geometry.h" // For Vec2D
+#include "Geometry.h" // For Vec2D, CPose
 #include <string>
 #include <vector>
 
 //-----------------------------------------------------------------------------
 // A pose: a position together with a heading, in radians.
 //-----------------------------------------------------------------------------
-struct CPose
-{
-    Vec2D mPosition;
-    float mHeading;   // radians; 0 faces +x (right), PI/2 faces +y (down)
-};
 
 //-----------------------------------------------------------------------------
 // CLoopReader: reads one loop file and stores the closed loop it describes.

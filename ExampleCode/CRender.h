@@ -82,13 +82,17 @@ class CRender
         void DrawCircle( Vec2D aPosition, int aRadius, Color aColor );
         void DrawLine( Vec2D aStart, Vec2D aEnd, float aThickness, Color aColor );
         void DrawLoop( const std::vector<Vec2D>& aVertices, float aThickness, Color aColor );
+        void DrawTrail( const std::vector<Vec2D>& aTrail, float aThickness, Color aColor );
 
         //---Access to the window---
         int GetScreenWidth() const;
         int GetScreenHeight() const;
 
     private:
-        //---The window---
+        // Maximum screen dimensions, in pixels
+        static const int kMaxScreenWidth = 800;
+        static const int kMaxScreenHeight = 600;
+
         const int mScreenWidth;
         const int mScreenHeight;
 };
