@@ -18,7 +18,7 @@ class CLFRobot : public CRobot
 {
     public:
         //---Ctor---
-        CLFRobot( const std::string& aName, const CLoopReader& aLine, int aRadius );
+        CLFRobot( const std::string& aName, const CLoopReader& aLine, int aRadius, Color aTrailColor, Color aBodyColor );
 
         //---Simulation---
         void Update( float aTimeStep ) override;

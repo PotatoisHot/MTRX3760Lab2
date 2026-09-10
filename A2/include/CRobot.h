@@ -11,6 +11,7 @@
 #ifndef CROBOT_H
 #define CROBOT_H
 
+#include "raylib.h"
 #include "Geometry.h"   // Vec2D, CPose
 #include "CMotor.h"
 #include <string>
@@ -24,7 +25,7 @@ class CRobot
     public:
         //---Ctor/Dtor---
         // The robot keeps a reference to aMap, so the map must outlive it.
-        CRobot( const std::string& aName, const CLoopReader& aMap, int aRadius );
+        CRobot( const std::string& aName, const CLoopReader& aMap, int aRadius, Color aTrailColor, Color aBodyColor );
         virtual ~CRobot();
 
         //---Access---
@@ -33,6 +34,9 @@ class CRobot
         const CPose&       GetStartPose() const;
         const CPose&       GetPose() const;
         const std::vector<Vec2D>& GetTrail() const;
+        
+        const Color& GetTrailColor() const;
+        const Color& GetBodyColor() const;
 
         //---Simulation---
         virtual void Update( float aTimeStep ) = 0;
@@ -54,6 +58,10 @@ class CRobot
 
         CMotor mLeftMotor;
         CMotor mRightMotor;
+
+        // For easier recognitions, especially in A5 where we have multiple robots
+        Color mTrailColor;
+        Color mBodyColor;
 
         std::vector<Vec2D> mTrail;   // everywhere the robot has been
 };

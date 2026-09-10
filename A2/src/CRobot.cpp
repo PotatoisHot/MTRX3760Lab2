@@ -8,14 +8,16 @@
 #include <cmath>
 
 //-----------------------------------------------------------------------------
-CRobot::CRobot( const std::string& aName, const CLoopReader& aMap, int aRadius )
+CRobot::CRobot( const std::string& aName, const CLoopReader& aMap, int aRadius, Color aTrailColor, Color aBodyColor )
     : mName( aName ),
       mRadius( aRadius ),
       mMap( aMap ),
       mStartPose( aMap.GetStartPose() ),
       mPose( aMap.GetStartPose() ),
       mLeftMotor( "Left motor" ),
-      mRightMotor( "Right motor" )
+      mRightMotor( "Right motor" ),
+      mTrailColor( aTrailColor ),
+      mBodyColor( aBodyColor )
 {
 }
 
@@ -58,6 +60,18 @@ const std::vector<Vec2D>& CRobot::GetTrail() const
 const CLoopReader& CRobot::GetMap() const
 {
     return mMap;
+}
+
+//-----------------------------------------------------------------------------
+const Color& CRobot::GetTrailColor() const
+{
+    return mTrailColor;
+}
+
+//-----------------------------------------------------------------------------
+const Color& CRobot::GetBodyColor() const
+{
+    return mBodyColor;
 }
 
 //-----------------------------------------------------------------------------

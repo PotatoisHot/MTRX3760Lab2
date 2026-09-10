@@ -17,7 +17,7 @@ class CWFRobot : public CRobot
 {
     public:
         //---Ctor---
-        CWFRobot( const std::string& aName, const CLoopReader& aWalls, int aRadius );
+        CWFRobot( const std::string& aName, const CLoopReader& aWalls, int aRadius, Color aTrailColor, Color aBodyColor );
 
         //---Simulation---
         void Update( float aTimeStep ) override;

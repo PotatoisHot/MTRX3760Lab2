@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------------
 
 #include "CSimulator.h"
+#include "raylib.h"
 #include "CWFRobot.h"
 #include "CLFRobot.h"
 #include "CLoopReader.h"
@@ -32,8 +33,9 @@ int main()
         TronsSim.AddMap( Walls );
         TronsSim.AddMap( Line );
 
-        CWFRobot WallFollower( "Wall follower", Walls, kRobotRadius );
-        CLFRobot LineFollower( "Line follower", Line,  kRobotRadius );
+
+        CWFRobot WallFollower( "Wall follower", Walls, kRobotRadius, YELLOW, ORANGE );
+        CLFRobot LineFollower( "Line follower", Line,  kRobotRadius, GREEN, BLUE );
 
         TronsSim.AddRobot( &WallFollower );
         TronsSim.AddRobot( &LineFollower );

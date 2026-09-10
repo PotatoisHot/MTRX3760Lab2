@@ -129,8 +129,8 @@ void CSimulator::Draw()
         Vec2D HeadingEnd = { Pose.mPosition.x + Radius * std::cos( Pose.mHeading ),
                              Pose.mPosition.y + Radius * std::sin( Pose.mHeading ) };
 
-        mRender.DrawTrail( Trail, 2.0f, PURPLE );
-        mRender.DrawCircle( Pose.mPosition, mRobots[i]->GetRadius(), RED );
+        mRender.DrawTrail( Trail, 2.0f, mRobots[i]->GetTrailColor() );
+        mRender.DrawCircle( Pose.mPosition, mRobots[i]->GetRadius(), mRobots[i]->GetBodyColor() );
         mRender.DrawLine( Pose.mPosition, HeadingEnd, 2.0f, WHITE );
     }
 
