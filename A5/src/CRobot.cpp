@@ -7,6 +7,7 @@
 #include "CLoopReader.h"
 #include <cmath>
 #include <random>
+#include <iostream>
 
 
 //-----------------------------------------------------------------------------
@@ -98,6 +99,9 @@ const Color& CRobot::GetBodyColor() const
 // Differential drive. Wheels sit on the rim either side, so the wheel base is
 // the diameter and turn rate = ( left - right ) / wheel base. With y down and
 // headings clockwise, a faster left wheel turns the robot right.
+// Check if robot hits a wall. If the distance from centre to the closest wall
+// is equal to or less than the robot radius, print out message to inform
+// users.
 //-----------------------------------------------------------------------------
 void CRobot::Drive( float aSpeed, float aTurnRate, float aTimeStep )
 {
@@ -124,4 +128,30 @@ void CRobot::Drive( float aSpeed, float aTurnRate, float aTimeStep )
     mPose.mPosition.x += Speed * std::cos( MidHeading ) * aTimeStep;
     mPose.mPosition.y += Speed * std::sin( MidHeading ) * aTimeStep;
     mPose.mHeading    += TurnRate * aTimeStep;
+
+    // Read the map
+    const std::vector<Vec2D>& Wall = GetMap().GetVertices();
+
+    float SmallestDistance = 0.0f;
+    int   NumSegments      = int( Wall.size() );
+
+    // Loop through walls in the map and find distance to closest wall
+    for ( int i = 0; i < NumSegments; i++ )
+    {
+        const Vec2D& SegStart = Wall[i];
+        const Vec2D& SegEnd   = Wall[( i + 1 ) % NumSegments];   // last joins back to first
+        Vec2D SegVector = { SegEnd.x - SegStart.x, SegEnd.y - SegStart.y };
+
+        float Distance = PointToWallDistance2D( GetPose().mPosition, SegStart, SegVector );
+
+        if ( Distance < SmallestDistance || i == 0 )
+        {
+            SmallestDistance = Distance;
+        }
+    }
+
+    if (SmallestDistance <= mRadius)
+    {
+        std::cout << "Robot " << mName << " hit a wall!!!" << std::endl;
+    }
 }

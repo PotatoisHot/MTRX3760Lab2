@@ -18,7 +18,6 @@
 #include <vector>
 #include <random>
 
-
 class CLoopReader;   // only a reference is kept here
 
 //-----------------------------------------------------------------------------
@@ -71,8 +70,8 @@ class CRobot
         // Constants for Random Offset Generation
         std::mt19937 mRandomGenerator;               // Mersenne Twister random number generator
         std::uniform_real_distribution<float> mRandomdRealDistribution;
-        static const int kPositionOffsetRange = 40;  // Range for random position offset
-        static const int kHeadingOffsetRange = 8;    // Range for random heading offset
+        static const int kPositionOffsetRange = 10;  // Range for random position offset
+        static const int kHeadingOffsetRange = 5;    // Range for random heading offset
         static const int kSpeedOffsetRange = 5;     // Scale for wheel rotation offset
 };
 
