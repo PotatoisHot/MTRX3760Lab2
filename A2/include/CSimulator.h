@@ -1,54 +1,49 @@
-/*
-Simulator.h
-
-This is the main class for the simulator. It is responsible for keeping the loop running, managing map, robots and watch over the timer.
-
-Written by Dangaroo :D
-*/
+//-----------------------------------------------------------------------------
+// CSimulator.h
+// Runs the show. Owns the renderer and the clock, draws every map it is given
+// and steps every robot. Robots sense their own maps; this only draws them.
+//
+// Written by Dangaroo :D
+//-----------------------------------------------------------------------------
 
 #ifndef SIMULATOR_H
 #define SIMULATOR_H
 
 #include "CRobot.h"
-#include "CMap.h"
 #include "CRender.h"
 #include "CLoopReader.h"
-#include <iostream>
 #include <string>
 #include <vector>
 
+//-----------------------------------------------------------------------------
 class CSimulator
 {
     public:
-        CSimulator(int aTimeStep);
+        //---Ctor/Dtor---
+        CSimulator( float aTimeStep );
         ~CSimulator();
 
-        // Configuration/ Setup
-        bool SetMap(std::string aFileName);
-        bool AddRobot(CRobot* apRobot, int aID);
-        bool RemoveRobot(int aID);
-        bool CheckConfig(); // Check if the simulator has been set up correctly to start running 
+        //---Setup---
+        // Maps and robots stay owned by the caller and must outlive this.
+        bool AddMap( const CLoopReader& aMap );   // must already be read in
+        bool AddRobot( CRobot* apRobot );
+        bool RemoveRobot();                        // not written yet
+        bool CheckConfig();                        // at least one map and one robot
 
-        // Features
+        //---Running---
         void RunSimulator();
-        bool PauseSimulator();
-        bool ResumeSimulator();
-        bool StopSimulator();
 
-        void CloseSimulator();
     private:
         void Update();
+        void Draw();
 
-        std::vector<CRobot*> mRobots; // Vector to store robots
-        std::vector<int>  mRobotIDs; // Each Robot being added has its own ID, and this vector store these ID for better management
-        CMap mMap;
+        std::vector<const CLoopReader*> mMaps;
+        std::vector<CRobot*>            mRobots;
         CRender mRender;
-        CLoopReader mLoopReader;
 
-        int mTimeStep;
-        int mCurrentTime;
+        float mTimeStep;
+        float mCurrentTime;
+        int   mUpdateCount;
 };
-
-
 
 #endif
