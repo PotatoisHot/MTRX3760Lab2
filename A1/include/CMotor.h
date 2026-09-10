@@ -31,7 +31,7 @@ class CMotor
         int         mSpeed;
 
         static const int kMaxSpeed =  20;
-        static const int kMinSpeed = -20;   // reverse allowed, so the robot can pivot on the spot
+        static const int kMinSpeed = -20;   // reverse allowed, so the robot can change the heading angle on the spot
 };
 
 #endif
