@@ -14,8 +14,9 @@ static const float kDegreesToRadians = float( M_PI ) / 180.0f;
 // Offsets are from the centre in the robot's own frame, x forward and y right.
 // CSensor turns them with the robot, so the start pose plays no part here.
 //-----------------------------------------------------------------------------
-CLFRobot::CLFRobot( const std::string& aName, const CLoopReader& aLine, int aRadius, Color aTrailColor, Color aBodyColor )
-    : CRobot( aName, aLine, aRadius, aTrailColor, aBodyColor ),
+CLFRobot::CLFRobot( const std::string& aName, const CLoopReader& aLine, const CLoopReader& aRoom,
+                    int aRadius, Color aTrailColor, Color aBodyColor )
+    : CRobot( aName, aLine, aRoom, aRadius, aTrailColor, aBodyColor ),
       mCentreSensor( Vec2D{ float( aRadius ), 0.0f } ),
       mRightSensor(  Vec2D{ float( aRadius ) * std::cos( kRightSensorAngle * kDegreesToRadians ),
                             float( aRadius ) * std::sin( kRightSensorAngle * kDegreesToRadians ) } )

@@ -27,6 +27,7 @@ int main()
 
     bool WallsOk = Walls.ReadFile( "../../ExampleCode/SimpleWalls.map" );
     bool LineOk  = Line.ReadFile(  "../../ExampleCode/SimpleLine.map" );
+    
 
     if ( WallsOk && LineOk )
     {
@@ -35,7 +36,7 @@ int main()
 
 
         CWFRobot WallFollower( "Wall follower", Walls, kRobotRadius, YELLOW, ORANGE );
-        CLFRobot LineFollower( "Line follower", Line,  kRobotRadius, GREEN, BLUE );
+        CLFRobot LineFollower( "Line follower", Line, Walls, kRobotRadius, GREEN, BLUE );   // follows the line, can hit the walls
 
         TronsSim.AddRobot( &WallFollower );
         TronsSim.AddRobot( &LineFollower );

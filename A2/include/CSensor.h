@@ -5,7 +5,7 @@
 // out where that is in the world for the current pose. What to do there is up
 // to the derived class.
 //
-// Written by Dangaroo :D
+// Written by Dangaroo and Ivy :D
 //-----------------------------------------------------------------------------
 
 #ifndef CSENSOR_H

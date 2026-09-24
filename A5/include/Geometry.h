@@ -3,7 +3,7 @@
 // Plain 2D types and the vector maths shared by the map, sensors and robots.
 // Nothing in here knows about rendering or robots.
 //
-// Written by Dangaroo :D
+// Written by Dangaroo and Ivy :D
 //-----------------------------------------------------------------------------
 
 #ifndef GEOMETRY_H
@@ -34,7 +34,9 @@ struct CRayHit
 
 //---Vector maths---
 float DotProduct2D( const Vec2D& aVector1, const Vec2D& aVector2 );
-float CrossProduct2D( const Vec2D& aVector1, const Vec2D& aVector2 );
+// The z component of the 3D cross product: zero when the two are parallel,
+// and its sign says which side of the first vector the second one lies.
+float PerpDotProduct2D( const Vec2D& aVector1, const Vec2D& aVector2 );
 bool  ParallelVectors2D( const Vec2D& aVector1, const Vec2D& aVector2 );
 float Vec2DMagnitude( const Vec2D& aVector );
 
@@ -46,6 +48,7 @@ CRayHit RayHitsWall2D( const Vec2D& aRayOrigin, const Vec2D& aRayDirection,
 
 //---Point to wall---
 // Shortest distance from a point to a wall segment, ends included.
+Vec2D NearestPointOnWall2D( const Vec2D& aPoint, const Vec2D& aWallStart, const Vec2D& aWallVector );
 float PointToWallDistance2D( const Vec2D& aPoint, const Vec2D& aWallStart, const Vec2D& aWallVector );
 
 #endif

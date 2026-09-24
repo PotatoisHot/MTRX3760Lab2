@@ -6,24 +6,30 @@
 #include "CRobot.h"
 #include "CLoopReader.h"
 #include <cmath>
+#include <iostream>
 
 //-----------------------------------------------------------------------------
-CRobot::CRobot( const std::string& aName, const CLoopReader& aMap, int aRadius, Color aTrailColor, Color aBodyColor )
+CRobot::CRobot( const std::string& aName, const CLoopReader& aMap, const CLoopReader& aRoom,
+                int aRadius, Color aTrailColor, Color aBodyColor )
     : mName( aName ),
       mRadius( aRadius ),
       mMap( aMap ),
+      mRoom( aRoom ),
       mStartPose( aMap.GetStartPose() ),
       mPose( aMap.GetStartPose() ),
       mLeftMotor( "Left motor" ),
       mRightMotor( "Right motor" ),
       mTrailColor( aTrailColor ),
-      mBodyColor( aBodyColor )
+      mBodyColor( aBodyColor ),
+      mCollisionCount( 0 ),
+      mTouchingWall( false )
 {
 }
 
 //-----------------------------------------------------------------------------
 CRobot::~CRobot()
 {
+    std::cout << "Robot " << mName << " is destroyed." << std::endl;
 }
 
 //-----------------------------------------------------------------------------
@@ -54,6 +60,12 @@ const CPose& CRobot::GetPose() const
 const std::vector<Vec2D>& CRobot::GetTrail() const
 {
     return mTrail;
+}
+
+//-----------------------------------------------------------------------------
+int CRobot::GetCollisionCount() const
+{
+    return mCollisionCount;
 }
 
 //-----------------------------------------------------------------------------
@@ -100,4 +112,58 @@ void CRobot::Drive( float aSpeed, float aTurnRate, float aTimeStep )
     mPose.mPosition.x += Speed * std::cos( MidHeading ) * aTimeStep;
     mPose.mPosition.y += Speed * std::sin( MidHeading ) * aTimeStep;
     mPose.mHeading    += TurnRate * aTimeStep;
+
+    HandleCollision( mRoom.GetVertices() );
 }
+
+//-----------------------------------------------------------------------------
+// Walls are solid. If the last move left the centre closer to a wall than one
+// radius, the robot is pushed back out along the wall's normal, so it slides
+// along the wall rather than passing through it. Contact is counted once, on
+// the update it starts, so a scrape along the wall is one collision.
+//-----------------------------------------------------------------------------
+void CRobot::HandleCollision( const std::vector<Vec2D>& aWalls )
+{
+    int   NumWalls     = int( aWalls.size() );
+    float Nearest      = 0.0f;
+    Vec2D NearestPoint = mPose.mPosition;
+
+    for ( int i = 0; i < NumWalls; i++ )
+    {
+        const Vec2D& WallStart = aWalls[i];
+        const Vec2D& WallEnd   = aWalls[( i + 1 ) % NumWalls];   // last joins back to first
+        Vec2D WallVector = { WallEnd.x - WallStart.x, WallEnd.y - WallStart.y };
+
+        Vec2D Point    = NearestPointOnWall2D( mPose.mPosition, WallStart, WallVector );
+        Vec2D ToCentre = { mPose.mPosition.x - Point.x, mPose.mPosition.y - Point.y };
+        float Distance = Vec2DMagnitude( ToCentre );
+
+        if ( i == 0 || Distance < Nearest )
+        {
+            Nearest      = Distance;
+            NearestPoint = Point;
+        }
+    }
+
+    bool Touching = ( NumWalls > 0 && Nearest <= float( mRadius ) );
+
+    if ( Touching && !mTouchingWall )
+    {
+        mCollisionCount++;
+        std::cout << "Robot " << mName << " hit a wall at ("
+                  << mPose.mPosition.x << ", " << mPose.mPosition.y
+                  << "), collision " << mCollisionCount << std::endl;
+    }
+
+    mTouchingWall = Touching;
+
+    // Push the centre back out to exactly one radius from the wall
+    if ( Touching && Nearest > 0.0f )
+    {
+        float Overlap = float( mRadius ) - Nearest;
+
+        mPose.mPosition.x += ( mPose.mPosition.x - NearestPoint.x ) / Nearest * Overlap;
+        mPose.mPosition.y += ( mPose.mPosition.y - NearestPoint.y ) / Nearest * Overlap;
+    }
+}
+

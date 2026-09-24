@@ -30,11 +30,16 @@ class CRobot
         const CPose&       GetStartPose() const;
         const CPose&       GetPose() const;
         const std::vector<Vec2D>& GetTrail() const;
+        int                GetCollisionCount() const;
 
         //---Simulation---
         // Advance the robot by one fixed timestep. aWalls is the closed loop
         // of wall vertices the sensors can see.
         virtual void Update( float aTimeStep, const std::vector<Vec2D>& aWalls ) = 0;
+
+        // Called by the simulator after each Update. Keeps the robot inside
+        // the walls and counts and reports each new contact.
+        void HandleCollision( const std::vector<Vec2D>& aWalls );
 
     protected:
         // Ask for a forward speed and a turn rate (radians per unit time,
@@ -54,6 +59,9 @@ class CRobot
 
         // Log the robot's previous coordinates for trail plotting
         std::vector<Vec2D> mTrail;
+
+        int  mCollisionCount;
+        bool mTouchingWall;   // so a long scrape counts as one collision
 };
 
 #endif

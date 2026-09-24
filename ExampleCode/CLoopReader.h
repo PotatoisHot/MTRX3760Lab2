@@ -53,6 +53,9 @@ class CLoopReader
         //---Ctor---
         CLoopReader();
 
+        //---Dtor---
+        ~CLoopReader();
+
         //---File reading---
         bool ReadFile( const std::string& arFilename );
 

@@ -25,6 +25,12 @@ CLoopReader::CLoopReader()
 {
 }
 
+//-----------------------------------------------------------------------------
+CLoopReader::~CLoopReader()
+{
+    std::cout << "Loop reader " << mName << " is destroyed." << std::endl;
+}
+
 
 //-----------------------------------------------------------------------------
 const std::string& CLoopReader::GetName() const

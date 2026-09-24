@@ -33,7 +33,7 @@ class CWFRobot : public CRobot
         // Distances are in map units and the turn rate is in radians per unit
         // time, so the gains are small. Tune here.
         const float mTargetWallDistance;                // robot centre to wall; set from the radius
-        static const int kWallMargin  = 30;             // clearance between rim and wall
+        static const int kWallMargin  = 45;             // clearance between rim and wall
         static const int kCruiseSpeed = 10;             // forward speed, units per unit time
         const float kDistanceGain = 0.01f;              // turn rate per unit of distance error
         const float kHeadingGain  = 0.04f;              // turn rate per unit of heading error

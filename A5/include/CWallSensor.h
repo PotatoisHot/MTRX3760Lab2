@@ -3,7 +3,7 @@
 // A range sensor at the robot's centre, aimed at an angle from its heading.
 // Casts a ray and reports the distance to the first wall it meets.
 //
-// Written by Dangaroo :D
+// Written by Dangaroo and Ivy :D
 //-----------------------------------------------------------------------------
 
 #ifndef CWALLSENSOR_H

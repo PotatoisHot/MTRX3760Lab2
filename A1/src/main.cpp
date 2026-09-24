@@ -14,6 +14,7 @@ int main()
     {
         // The robot starts where the map says. It lives on the stack here and
         // outlives the simulator's use of it, so no new/delete is needed.
+
         CWFRobot WallFollower( "Wall follower", TronsSim.GetStartPose(), kRobotRadius );
 
         TronsSim.AddRobot( &WallFollower );

@@ -5,7 +5,7 @@
 // it is built and starts where that map says. Derived classes add sensors and
 // a control law in Update().
 //
-// Written by Dangaroo :D
+// Written by Dangaroo and Ivy :D
 //-----------------------------------------------------------------------------
 
 #ifndef CROBOT_H
@@ -24,8 +24,11 @@ class CRobot
 {
     public:
         //---Ctor/Dtor---
-        // The robot keeps a reference to aMap, so the map must outlive it.
-        CRobot( const std::string& aName, const CLoopReader& aMap, int aRadius, Color aTrailColor, Color aBodyColor );
+        // aMap is what the robot senses, aRoom is what it can bump into. For a
+        // wall follower they are the same loop. The robot keeps references to
+        // both, so they must outlive it.
+        CRobot( const std::string& aName, const CLoopReader& aMap, const CLoopReader& aRoom,
+                int aRadius, Color aTrailColor, Color aBodyColor );
         virtual ~CRobot();
 
         //---Access---
@@ -34,6 +37,7 @@ class CRobot
         const CPose&       GetStartPose() const;
         const CPose&       GetPose() const;
         const std::vector<Vec2D>& GetTrail() const;
+        int                GetCollisionCount() const;
         
         const Color& GetTrailColor() const;
         const Color& GetBodyColor() const;
@@ -50,9 +54,13 @@ class CRobot
         void Drive( float aSpeed, float aTurnRate, float aTimeStep );
 
     private:
+        // Keep the robot inside the walls; count and report each new contact
+        void HandleCollision( const std::vector<Vec2D>& aWalls );
+
         std::string        mName;
         int                mRadius;
         const CLoopReader& mMap;
+        const CLoopReader& mRoom;
         CPose              mStartPose;
         CPose              mPose;
 
@@ -64,6 +72,9 @@ class CRobot
         Color mBodyColor;
 
         std::vector<Vec2D> mTrail;   // everywhere the robot has been
+
+        int  mCollisionCount;
+        bool mTouchingWall;          // so a long scrape counts as one collision
 };
 
 #endif

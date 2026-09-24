@@ -20,6 +20,9 @@ CSimulator::CSimulator( float aTimeStep )
 }
 
 //-----------------------------------------------------------------------------
+// The simulator only borrows its maps and robots, so it deletes nothing. They
+// are stack objects in main.cpp and look after themselves.
+//-----------------------------------------------------------------------------
 CSimulator::~CSimulator()
 {
     std::cout << "Simulator is being removed" << std::endl;
@@ -85,7 +88,21 @@ void CSimulator::RunSimulator()
     }
 
     mRender.CloseWindow();
+
+    // End of run summary
+    int NumRobots       = int( mRobots.size() );
+    int TotalCollisions = 0;
+
     std::cout << "Simulator has been closed after " << mUpdateCount << " updates" << std::endl;
+
+    for ( int i = 0; i < NumRobots; i++ )
+    {
+        int Collisions = mRobots[i]->GetCollisionCount();
+        TotalCollisions += Collisions;
+        std::cout << "  " << mRobots[i]->GetName() << ": " << Collisions << " collisions" << std::endl;
+    }
+
+    std::cout << "  Total: " << TotalCollisions << " collisions" << std::endl;
 }
 
 //-----------------------------------------------------------------------------

@@ -15,6 +15,9 @@ CSimulator::CSimulator( float aTimeStep )
 }
 
 //-----------------------------------------------------------------------------
+// The simulator only borrows its robots, so it deletes nothing. The robot in
+// main.cpp is a stack object and is gone before this runs.
+//-----------------------------------------------------------------------------
 CSimulator::~CSimulator()
 {
     std::cout << "Simulator is being removed" << std::endl;
@@ -85,7 +88,21 @@ void CSimulator::RunSimulator()
     }
 
     mRender.CloseWindow();
+
+    // End of run summary
+    int NumRobots       = int( mRobots.size() );
+    int TotalCollisions = 0;
+
     std::cout << "Simulator has been closed after " << mUpdateCount << " updates" << std::endl;
+
+    for ( int i = 0; i < NumRobots; i++ )
+    {
+        int Collisions = mRobots[i]->GetCollisionCount();
+        TotalCollisions += Collisions;
+        std::cout << "  " << mRobots[i]->GetName() << ": " << Collisions << " collisions" << std::endl;
+    }
+
+    std::cout << "  Total: " << TotalCollisions << " collisions" << std::endl;
 }
 
 //-----------------------------------------------------------------------------
@@ -98,6 +115,7 @@ void CSimulator::Update()
     for ( int i = 0; i < NumRobots; i++ )
     {
         mRobots[i]->Update( float( mTimeStep ), mLoopReader.GetVertices() );
+        mRobots[i]->HandleCollision( mLoopReader.GetVertices() );
     }
 
     mCurrentTime += mTimeStep;
@@ -123,9 +141,9 @@ void CSimulator::Draw()
         Vec2D HeadingEnd = { Pose.mPosition.x + Radius * std::cos( Pose.mHeading ),
                              Pose.mPosition.y + Radius * std::sin( Pose.mHeading ) };
 
+        mRender.DrawTrail( Trail, 2.0f, PURPLE );
         mRender.DrawCircle( Pose.mPosition, mRobots[i]->GetRadius(), RED );
         mRender.DrawLine( Pose.mPosition, HeadingEnd, 2.0f, WHITE );
-        mRender.DrawTrail( Trail, 2.0f, PURPLE );
     }
 
     mRender.EndDrawing();

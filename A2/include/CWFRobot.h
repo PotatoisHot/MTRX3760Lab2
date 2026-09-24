@@ -3,7 +3,7 @@
 // Wall follower. Two range sensors aimed to the right, at 90 and 45 degrees,
 // and a controller that holds a set distance from the wall on that side.
 //
-// Written by Dangaroo :D
+// Written by Dangaroo and Ivy :D
 //-----------------------------------------------------------------------------
 
 #ifndef CWFROBOT_H
@@ -31,7 +31,7 @@ class CWFRobot : public CRobot
         // Distances are in map units and turn rate in radians per unit time,
         // so the gains are small.
         const float mTargetWallDistance;      // centre to wall, set from the radius
-        static const int kWallMargin  = 30;   // gap between rim and wall
+        static const int kWallMargin  = 45;   // gap between rim and wall
         static const int kCruiseSpeed = 10;   // units per unit time
         const float kDistanceGain = 0.01f;
         const float kHeadingGain  = 0.04f;

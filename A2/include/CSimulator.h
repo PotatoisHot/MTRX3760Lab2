@@ -3,7 +3,7 @@
 // Runs the show. Owns the renderer and the clock, draws every map it is given
 // and steps every robot. Robots sense their own maps; this only draws them.
 //
-// Written by Dangaroo :D
+// Written by Dangaroo and Ivy :D
 //-----------------------------------------------------------------------------
 
 #ifndef SIMULATOR_H

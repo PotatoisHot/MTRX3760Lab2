@@ -4,7 +4,7 @@
 // line and one a little round to the right, and a controller that keeps the
 // centre sensor on the line.
 //
-// Written by Dangaroo :D
+// Written by Dangaroo and Ivy :D
 //-----------------------------------------------------------------------------
 
 #ifndef CLFROBOT_H
@@ -18,7 +18,9 @@ class CLFRobot : public CRobot
 {
     public:
         //---Ctor---
-        CLFRobot( const std::string& aName, const CLoopReader& aLine, int aRadius, Color aTrailColor, Color aBodyColor );
+        // aLine is what it follows, aRoom is what it can bump into.
+        CLFRobot( const std::string& aName, const CLoopReader& aLine, const CLoopReader& aRoom,
+                  int aRadius, Color aTrailColor, Color aBodyColor );
 
         //---Simulation---
         void Update( float aTimeStep ) override;

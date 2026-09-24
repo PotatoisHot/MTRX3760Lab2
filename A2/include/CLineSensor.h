@@ -3,7 +3,7 @@
 // A line sensor mounted somewhere on the robot, looking straight down. Says
 // whether the floor under it is line or not.
 //
-// Written by Dangaroo :D
+// Written by Dangaroo and Ivy :D
 //-----------------------------------------------------------------------------
 
 #ifndef CLINESENSOR_H

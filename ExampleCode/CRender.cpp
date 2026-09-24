@@ -14,6 +14,10 @@ CRender::CRender()
         mScreenWidth( kMaxScreenWidth ),
         mScreenHeight( kMaxScreenHeight )
 {
+    // Keep raylib's own chatter off the console, so the simulator's output
+    // is readable. Warnings and errors still come through.
+    SetTraceLogLevel( LOG_WARNING );
+
     InitWindow( mScreenWidth, mScreenHeight, "Watashi wa Dangaroo desu" );
     SetTargetFPS( 60 );
 }

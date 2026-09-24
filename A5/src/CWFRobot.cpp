@@ -12,7 +12,7 @@ static const float kRootTwo = 1.41421356f;
 
 //-----------------------------------------------------------------------------
 CWFRobot::CWFRobot( const std::string& aName, const CLoopReader& aWalls, int aRadius, Color aTrailColor, Color aBodyColor )
-    : CRobot( aName, aWalls, aRadius, aTrailColor, aBodyColor ),
+    : CRobot( aName, aWalls, aWalls, aRadius, aTrailColor, aBodyColor ),   // senses the walls and can hit them
       mSensor90( 90 ),
       mSensor45( 45 ),
       mTargetWallDistance( float( aRadius + kWallMargin ) )

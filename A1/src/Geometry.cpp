@@ -1,10 +1,23 @@
 #include "Geometry.h"
+#include <cmath>
 
-//---Two directions whose cross product is smaller than this are parallel.------
+//---Two directions whose perp dot product is smaller than this are parallel.---
 static const float kParallelTolerance = 1e-6f;
 
 //-----------------------------------------------------------------------------
-float CrossProduct2D( const Vec2D& aVector1, const Vec2D& aVector2 )
+float DotProduct2D( const Vec2D& aVector1, const Vec2D& aVector2 )
+{
+    return ( aVector1.x * aVector2.x ) + ( aVector1.y * aVector2.y );
+}
+
+//-----------------------------------------------------------------------------
+float Vec2DMagnitude( const Vec2D& aVector )
+{
+    return std::sqrt( aVector.x * aVector.x + aVector.y * aVector.y );
+}
+
+//-----------------------------------------------------------------------------
+float PerpDotProduct2D( const Vec2D& aVector1, const Vec2D& aVector2 )
 {
     return ( aVector1.x * aVector2.y ) - ( aVector1.y * aVector2.x );
 }
@@ -12,11 +25,11 @@ float CrossProduct2D( const Vec2D& aVector1, const Vec2D& aVector2 )
 //-----------------------------------------------------------------------------
 bool ParallelVectors2D( const Vec2D& aVector1, const Vec2D& aVector2 )
 {
-    float Cross = CrossProduct2D( aVector1, aVector2 );
+    float PerpDot = PerpDotProduct2D( aVector1, aVector2 );
 
-    // Compare both ways so a large negative cross product is not mistaken
+    // Compare both ways so a large negative perp dot product is not mistaken
     // for parallel.
-    return ( Cross > -kParallelTolerance && Cross < kParallelTolerance );
+    return ( PerpDot > -kParallelTolerance && PerpDot < kParallelTolerance );
 }
 
 //-----------------------------------------------------------------------------
@@ -38,9 +51,9 @@ CRayHit RayHitsWall2D( const Vec2D& aRayOrigin, const Vec2D& aRayDirection,
         Vec2D OriginToWall = { aWallStart.x - aRayOrigin.x,
                               aWallStart.y - aRayOrigin.y };
 
-        float Denom = CrossProduct2D( aRayDirection, aWallVector );
-        float T     = CrossProduct2D( OriginToWall, aWallVector ) / Denom;
-        float U     = CrossProduct2D( OriginToWall, aRayDirection ) / Denom;
+        float Denom = PerpDotProduct2D( aRayDirection, aWallVector );
+        float T     = PerpDotProduct2D( OriginToWall, aWallVector ) / Denom;
+        float U     = PerpDotProduct2D( OriginToWall, aRayDirection ) / Denom;
 
         if ( T > 0.0f && U >= 0.0f && U <= 1.0f )
         {
@@ -50,4 +63,41 @@ CRayHit RayHitsWall2D( const Vec2D& aRayOrigin, const Vec2D& aRayDirection,
     }
 
     return Result;
+}
+
+//-----------------------------------------------------------------------------
+// Project the point onto the wall to find the nearest spot on it. Holding the
+// projection inside [0, 1] keeps that spot on the segment, so past either end
+// the answer is the end itself, not a point on the line's extension.
+//-----------------------------------------------------------------------------
+Vec2D NearestPointOnWall2D( const Vec2D& aPoint, const Vec2D& aWallStart, const Vec2D& aWallVector )
+{
+    Vec2D WallStartToPoint = { aPoint.x - aWallStart.x, aPoint.y - aWallStart.y };
+
+    // How far along the wall the point projects, 0 at the start and 1 at the end
+    float WallLengthSquared = DotProduct2D( aWallVector, aWallVector );
+    float ProjectionRatio   = DotProduct2D( WallStartToPoint, aWallVector ) / WallLengthSquared;
+
+    if ( ProjectionRatio < 0.0f )
+    {
+        ProjectionRatio = 0.0f;
+    }
+    else if ( ProjectionRatio > 1.0f )
+    {
+        ProjectionRatio = 1.0f;
+    }
+
+    Vec2D Nearest = { aWallStart.x + ProjectionRatio * aWallVector.x,
+                      aWallStart.y + ProjectionRatio * aWallVector.y };
+
+    return Nearest;
+}
+
+//-----------------------------------------------------------------------------
+float PointToWallDistance2D( const Vec2D& aPoint, const Vec2D& aWallStart, const Vec2D& aWallVector )
+{
+    Vec2D Nearest = NearestPointOnWall2D( aPoint, aWallStart, aWallVector );
+    Vec2D ToPoint = { aPoint.x - Nearest.x, aPoint.y - Nearest.y };
+
+    return Vec2DMagnitude( ToPoint );
 }

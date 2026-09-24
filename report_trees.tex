@@ -1,0 +1,107 @@
+% ---------------------------------------------------------------------------
+% File trees for A1, A2 and A5, plus the shared ExampleCode folder.
+%
+% Needs in the preamble:   \usepackage{dirtree}
+% Then in each section:    \ExampleCodeTree   and   \AOneTree / \ATwoTree / \AFiveTree
+%
+% dirtree syntax: ".<level> <name>." with \DTcomment{...} for the note.
+% ---------------------------------------------------------------------------
+
+% ---- ExampleCode: shared by every assignment, built from ../ExampleCode ----
+\newcommand{\ExampleCodeTree}{%
+\dirtree{%
+.1 ExampleCode/\DTcomment{task-supplied library and has been modified to be used for A1, A2 and A5}.
+.2 CRender.h\DTcomment{the only class allowed to talk to raylib; draws loops, discs, lines, trails}.
+.2 CRender.cpp\DTcomment{raylib calls live here; added DrawTrail and silenced raylib's log}.
+.2 CLoopReader.h\DTcomment{reads a .map file into a name, a start pose and a closed loop of vertices}.
+.2 CLoopReader.cpp\DTcomment{the parser}.
+.2 SimpleWalls.map\DTcomment{the L-shaped room the wall follower drives round}.
+.2 SimpleLine.map\DTcomment{the closed loop on the floor the line follower tracks}.
+.2 TestRender.cpp\DTcomment{staff demo of CRender, not used by the simulator}.
+.2 TestLoopReader.cpp\DTcomment{staff demo of CLoopReader, not used by the simulator}.
+.2 readme\DTcomment{staff notes on installing raylib and building the demos}.
+}}
+
+% ---- A1: one wall follower ----
+\newcommand{\AOneTree}{%
+\dirtree{%
+.1 A1/.
+.2 CMakeLists.txt\DTcomment{builds simulator from src/ and ../ExampleCode, output to bin/}.
+.2 include/.
+.3 CSimulator.h\DTcomment{owns the map, renderer and clock; steps and draws every robot}.
+.3 CRobot.h\DTcomment{base robot: pose, two motors, kinematics, trail, solid-wall collision handling}.
+.3 CWFRobot.h\DTcomment{wall follower: two range sensors and the two-term controller}.
+.3 CSensor.h\DTcomment{range sensor: casts a ray at an angle and reports the distance}.
+.3 CMotor.h\DTcomment{one wheel; holds a speed clamped to its limits}.
+.3 Geometry.h\DTcomment{Vec2D, CPose, ray--wall intersection, nearest point and distance to a wall}.
+.3 Helper.h\DTcomment{ClampInt}.
+.2 src/.
+.3 main.cpp\DTcomment{loads SimpleWalls.map, makes one CWFRobot, runs the simulator}.
+.3 CSimulator.cpp.
+.3 CRobot.cpp\DTcomment{Drive() with midpoint integration; HandleCollision() pushes the robot back inside and counts contacts}.
+.3 CWFRobot.cpp\DTcomment{Update(): distance and heading errors to a turn rate}.
+.3 CSensor.cpp.
+.3 CMotor.cpp.
+.3 Geometry.cpp.
+.3 Helper.cpp.
+}}
+
+% ---- A2: wall follower and line follower together ----
+\newcommand{\ATwoTree}{%
+\dirtree{%
+.1 A2/.
+.2 CMakeLists.txt\DTcomment{as A1, with the new sensor and robot sources added}.
+.2 include/.
+.3 CSimulator.h\DTcomment{now borrows any number of maps and robots; only draws and steps}.
+.3 CRobot.h\DTcomment{base robot; given the map it senses and the room it can hit, plus its colours}.
+.3 CWFRobot.h\DTcomment{wall follower, unchanged controller; senses and collides with the room}.
+.3 CLFRobot.h\DTcomment{line follower: two line sensors on the rim and a two-bit controller}.
+.3 CSensor.h\DTcomment{sensor base: owns the mounting and the robot-to-world transform}.
+.3 CWallSensor.h\DTcomment{range sensor, was A1's CSensor; returns a distance}.
+.3 CLineSensor.h\DTcomment{line sensor at an offset; returns whether it is over the line}.
+.3 CMotor.h\DTcomment{unchanged}.
+.3 Geometry.h\DTcomment{same maths as A1; used by both sensors and the collision handling}.
+.3 Helper.h\DTcomment{Clamp, overloaded for int and float}.
+.2 src/.
+.3 main.cpp\DTcomment{loads both maps, makes one robot of each type, lends them to the simulator}.
+.3 CSimulator.cpp.
+.3 CRobot.cpp.
+.3 CWFRobot.cpp.
+.3 CLFRobot.cpp\DTcomment{Update(): sensor bits to a turn rate}.
+.3 CSensor.cpp.
+.3 CWallSensor.cpp.
+.3 CLineSensor.cpp.
+.3 CMotor.cpp.
+.3 Geometry.cpp.
+.3 Helper.cpp.
+}}
+
+% ---- A5: twenty of each, with noise ----
+\newcommand{\AFiveTree}{%
+\dirtree{%
+.1 A5/\DTcomment{a copy of A2; only the files noted below differ}.
+.2 CMakeLists.txt.
+.2 include/.
+.3 CSimulator.h.
+.3 CRobot.h\DTcomment{adds RandomOffset() and the three noise constants}.
+.3 CWFRobot.h.
+.3 CLFRobot.h.
+.3 CSensor.h.
+.3 CWallSensor.h.
+.3 CLineSensor.h.
+.3 CMotor.h.
+.3 Geometry.h.
+.3 Helper.h.
+.2 src/.
+.3 main.cpp\DTcomment{seeds rand(), makes twenty of each robot in reserved vectors, one colour each; two flags pick which types run}.
+.3 CSimulator.cpp.
+.3 CRobot.cpp\DTcomment{noise on the start pose in the constructor and on each wheel in Drive()}.
+.3 CWFRobot.cpp.
+.3 CLFRobot.cpp.
+.3 CSensor.cpp.
+.3 CWallSensor.cpp.
+.3 CLineSensor.cpp.
+.3 CMotor.cpp.
+.3 Geometry.cpp.
+.3 Helper.cpp.
+}}
